@@ -1,0 +1,2 @@
+class SessionIdIntegrityError(Exception):
+    pass
