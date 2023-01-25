@@ -1,5 +1,5 @@
-from typing import List
-from pydantic import BaseModel, Field, conlist, confloat, conint
+from typing import List, Optional
+from pydantic import BaseModel, conlist, confloat, conint
 
 
 class AudioFile(BaseModel):
@@ -9,8 +9,15 @@ class AudioFile(BaseModel):
     step_count: int
 
 
-class GetAudioFile(AudioFile):
-    id: int
+class CreateAudioFile(AudioFile):
+    id: Optional[int]
+
+    class Config:
+        orm_mode = True
+
+
+class UpdateAudioFile(CreateAudioFile):
+    pass
 
 
 class User(BaseModel):
