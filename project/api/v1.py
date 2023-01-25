@@ -1,15 +1,35 @@
-from typing import Optional
+from typing import Optional, List
 
-from fastapi import APIRouter, Body, Depends, HTTPException
+from fastapi import APIRouter, Body, Depends, HTTPException, Path
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from project.crud.audo_file import audio_file as crud_audio_file
+from project.crud.user import user as crud_user
 from project.deps import get_db
 from project.exceptions import SessionIdIntegrityError
-from project.schema import AudioFile, CreateAudioFile, DeleteAudioFile
+from project.schema import (
+    AudioFile,
+    CreateAudioFile,
+    DeleteAudioFile,
+    User,
+    CreateUser,
+    UpdateUser,
+    DeleteUser
+)
 
 router = APIRouter()
+
+
+@router.get(
+    "/audio_files/",
+    tags=["audio-files"],
+    description="List and search for audio files",
+    response_model=List[CreateAudioFile],
+)
+def create_audio_file(session_id: Optional[int] = None, db: Session = Depends(get_db)):
+    audio_files = crud_audio_file.get_by_session_id(db, session_id)
+    return audio_files
 
 
 @router.post(
@@ -31,7 +51,7 @@ def create_audio_file(
 @router.put(
     "/audio_files/",
     tags=["audio-files"],
-    description="Create a new audio file",
+    description="Updates an audio file",
     response_model=CreateAudioFile,
 )
 def update_audio_file(
@@ -52,7 +72,7 @@ def update_audio_file(
 @router.delete(
     "/audio_files/",
     tags=["audio-files"],
-    description="Create a new audio file",
+    description="Deletes an audio file",
     response_model=Optional[CreateAudioFile],
 )
 def delete_audio_file(
@@ -62,3 +82,54 @@ def delete_audio_file(
         db, audio.session_id, audio.step_count
     )
     return data_audio
+
+
+@router.get(
+    "/user/",
+    tags=["users"],
+    description="Retrieves and search a list of users",
+    response_model=List[CreateUser],
+)
+def list_users(session_id: Optional[int] = None, db: Session = Depends(get_db)):
+    users = crud_user.get_multi(db)
+    return users
+
+
+@router.post(
+    "/user/",
+    tags=["users"],
+    description="Create a new user",
+    response_model=CreateUser,
+)
+def create_user(user: User = Body(embed=True), db: Session = Depends(get_db)):
+    _user = crud_user.create(db, obj_in=user)
+    return _user
+
+
+@router.put(
+    "/user/{user_id}",
+    tags=["users"],
+    description="Updates the user information",
+    response_model=UpdateUser,
+)
+def update_user(
+    user: User = Body(embed=True),
+    user_id: int = Path(title="The id of the user"),
+    db: Session = Depends(get_db),
+):
+    user_db = crud_user.get(db, user_id)
+    user_obj = crud_user.update(db, db_obj=user_db, obj_in=user)
+    return user_obj
+
+
+@router.delete(
+    "/user/{user_id}",
+    tags=["users"],
+    description="Deletes an user",
+    response_model=Optional[DeleteUser],
+)
+def delete_user(
+    user_id: int = Path(title="The id of the user"), db: Session = Depends(get_db)
+):
+    user = crud_user.remove(db, _id=user_id)
+    return user

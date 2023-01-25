@@ -22,8 +22,7 @@ class CRUDBase(
     def get(
         self, db: Session, model_id: Optional[Any], filter_expressions: Optional[List] = None
     ) -> Optional[ModelType]:
-        if filter_expressions is None:
-            filter_expressions = []
+        filter_expressions = filter_expressions if filter_expressions is not None else []
         query = db.query(self.model)
         if model_id:
             query = query.filter(self.model.id == model_id)
@@ -39,7 +38,7 @@ class CRUDBase(
         limit: int = 100,
         filter_expressions: Optional[List] = None
     ) -> List[ModelType]:
-        filter_expressions = filter_expressions if filter_expressions is None else []
+        filter_expressions = filter_expressions if filter_expressions is not None else []
         query = db.query(self.model)
         for f in filter_expressions:
             query = query.filter(f)
@@ -81,7 +80,6 @@ class CRUDBase(
         filter_expressions = filter_expressions if filter_expressions is not None else []
         obj = None
         query = db.query(self.model)
-        breakpoint()
         if _id is not None:
             obj = query.get(_id)
 

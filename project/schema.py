@@ -1,4 +1,5 @@
-from typing import List, Optional
+from typing import Optional
+
 from pydantic import BaseModel, conlist, confloat, conint
 
 
@@ -30,5 +31,16 @@ class User(BaseModel):
     address: str
 
 
-class GetUser(User):
-    id: int
+class CreateUser(User):
+    id: Optional[int]
+
+    class Config:
+        orm_mode = True
+
+
+class UpdateUser(CreateUser):
+    pass
+
+
+class DeleteUser(CreateUser):
+    pass
