@@ -1,0 +1,2 @@
+PROJECT_NAME="Take home assessment, docker version"
+SQLALCHEMY_DATABASE_URI="postgresql://cnch_user:cnch_password@db:5432/cnch_db"

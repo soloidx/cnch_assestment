@@ -11,6 +11,7 @@ uvicorn = {extras = ["standard"], version = "^0.20.0"}
 typer = "^0.7.0"
 SQLAlchemy = "^1.4.46"
 alembic = "^1.9.2"
+psycopg2-binary = "^2.9.5"
 
 [tool.poetry.dev-dependencies]
 pytest = "^7.2.1"

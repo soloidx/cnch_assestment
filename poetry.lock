@@ -327,6 +327,14 @@ dev = ["pre-commit", "tox"]
 testing = ["pytest", "pytest-benchmark"]
 
 [[package]]
+name = "psycopg2-binary"
+version = "2.9.5"
+description = "psycopg2 - Python-PostgreSQL Database Adapter"
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[[package]]
 name = "pydantic"
 version = "1.10.4"
 description = "Data validation and settings management using python type hints"
@@ -577,7 +585,7 @@ python-versions = ">=3.7"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "4fb971e565c81b1bd1f3566192365ec40d4705bdfe5a1e9aafb9da5958ae1fc1"
+content-hash = "5ec5a59ff55ad770e4c4dbd59e356b29c8ad89f80156315d230a82b71282bb2d"
 
 [metadata.files]
 alembic = []
@@ -606,6 +614,7 @@ mypy-extensions = []
 orjson = []
 packaging = []
 pluggy = []
+psycopg2-binary = []
 pydantic = []
 pytest = []
 python-dotenv = []
