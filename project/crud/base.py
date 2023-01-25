@@ -20,8 +20,10 @@ class CRUDBase(
         self.model = model
 
     def get(
-        self, db: Session, model_id: Optional[Any], filter_expressions: List[Any] = []
+        self, db: Session, model_id: Optional[Any], filter_expressions: Optional[List] = None
     ) -> Optional[ModelType]:
+        if filter_expressions is None:
+            filter_expressions = []
         query = db.query(self.model)
         if model_id:
             query = query.filter(self.model.id == model_id)
@@ -35,8 +37,9 @@ class CRUDBase(
         *,
         skip: int = 0,
         limit: int = 100,
-        filter_expressions: List[Any] = []
+        filter_expressions: Optional[List] = None
     ) -> List[ModelType]:
+        filter_expressions = filter_expressions if filter_expressions is None else []
         query = db.query(self.model)
         for f in filter_expressions:
             query = query.filter(f)
@@ -61,7 +64,7 @@ class CRUDBase(
         if isinstance(obj_in, dict):
             update_data = obj_in
         else:
-            update_data = obj_in.dict(exlude_unset=True)
+            update_data = obj_in.dict(exclude_unset=True)
 
         for field in obj_data:
             if field in update_data:
@@ -73,10 +76,12 @@ class CRUDBase(
         return db_obj
 
     def remove(
-        self, db: Session, *, _id: Optional[int], filter_expressions: List[Any] = []
-    ) -> ModelType:
+        self, db: Session, *, _id: Optional[int], filter_expressions: Optional[List] = None
+    ) -> Optional[ModelType]:
+        filter_expressions = filter_expressions if filter_expressions is not None else []
         obj = None
         query = db.query(self.model)
+        breakpoint()
         if _id is not None:
             obj = query.get(_id)
 

@@ -20,6 +20,10 @@ class UpdateAudioFile(CreateAudioFile):
     pass
 
 
+class DeleteAudioFile(CreateAudioFile):
+    pass
+
+
 class User(BaseModel):
     name: str
     email: str

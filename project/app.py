@@ -12,6 +12,7 @@ app = FastAPI(title=settings.PROJECT_NAME)
 async def root():
     return {"Project": "CLabs Take home project, check /docs for api documentation"}
 
+
 @app.exception_handler(SessionIdIntegrityError)
 def handling_duplicate_session_id(request: Request, exc: SessionIdIntegrityError):
     return JSONResponse(
