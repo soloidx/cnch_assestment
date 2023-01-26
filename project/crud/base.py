@@ -42,6 +42,8 @@ class CRUDBase(
         query = db.query(self.model)
         for f in filter_expressions:
             query = query.filter(f)
+        # from sqlalchemy.dialects import sqlite
+        # print(str(query.statement.compile(dialect=sqlite.dialect(), compile_kwargs={"literal_binds": True})))
         return query.offset(skip).limit(limit).all()
 
     def create(self, db: Session, *, obj_in: CreateSchemaType) -> ModelType:

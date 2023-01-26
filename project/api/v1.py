@@ -1,6 +1,6 @@
 from typing import Optional, List
 
-from fastapi import APIRouter, Body, Depends, HTTPException, Path
+from fastapi import APIRouter, Body, Depends, HTTPException, Path, Query
 from sqlalchemy.orm import Session
 
 from project.crud.audo_file import audio_file as crud_audio_file
@@ -95,8 +95,11 @@ def delete_audio_file(
     description="Retrieves and search a list of users",
     response_model=List[CreateUser],
 )
-def list_users(session_id: Optional[int] = None, db: Session = Depends(get_db)):
-    users = crud_user.get_multi(db)
+def list_users(
+    q: Optional[str] = Query(default=None, description="search query"),
+    db: Session = Depends(get_db),
+):
+    users = crud_user.search(db, q)
     return users
 
 
