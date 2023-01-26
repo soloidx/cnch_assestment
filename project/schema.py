@@ -1,6 +1,6 @@
 from typing import Optional
 
-from pydantic import BaseModel, conlist, confloat, conint
+from pydantic import BaseModel, conlist, confloat, conint, EmailStr
 
 
 class AudioFile(BaseModel):
@@ -21,13 +21,14 @@ class UpdateAudioFile(CreateAudioFile):
     pass
 
 
-class DeleteAudioFile(CreateAudioFile):
-    pass
+class DeleteAudioFile(BaseModel):
+    session_id: int
+    step_count: int
 
 
 class User(BaseModel):
     name: str
-    email: str
+    email: EmailStr
     address: str
 
 

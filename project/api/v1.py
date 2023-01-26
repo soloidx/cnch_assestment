@@ -1,7 +1,6 @@
 from typing import Optional, List
 
 from fastapi import APIRouter, Body, Depends, HTTPException, Path
-from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from project.crud.audo_file import audio_file as crud_audio_file
@@ -65,7 +64,7 @@ def update_audio_file(
         raise HTTPException(status_code=404, detail="Item not found")
 
     # this is not needed because the only way to identify an audio object is by session_id and
-    # step count but,  in case we used an unique id we need to check for conflicts on update
+    # step count but,  in case we used a unique id we need to check for conflicts on update
 
     # if audio_obj.session_id != audio.session_id or audio_obj.step_count != audio.step_count:
     #     if crud_audio_file.is_duplicated_session_id(db, audio):
