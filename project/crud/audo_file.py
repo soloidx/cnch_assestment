@@ -32,12 +32,25 @@ class CRUDAudioFile(CRUDBase[AudioFile, CreateAudioFile, UpdateAudioFile]):
             ],
         )
 
-    def get_by_session_id(self, db: Session, session_id: Optional[int]) -> List[audio_file_model.AudioFile]:
+    def get_by_session_id(
+        self, db: Session, session_id: Optional[int]
+    ) -> List[audio_file_model.AudioFile]:
         exp = []
         if session_id is not None:
             exp = [audio_file_model.AudioFile.session_id == session_id]
 
         return self.get_multi(db, filter_expressions=exp)
+
+    def is_duplicated_session_id(self, db: Session, audio: AudioFile):
+        count = (
+            db.query(self.model)
+            .filter(
+                audio_file_model.AudioFile.session_id == audio.session_id,
+                audio_file_model.AudioFile.step_count == audio.step_count,
+            )
+            .count()
+        )
+        return count > 0
 
 
 audio_file = CRUDAudioFile(audio_file_model.AudioFile)

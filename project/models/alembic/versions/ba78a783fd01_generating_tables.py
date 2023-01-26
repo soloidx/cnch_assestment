@@ -1,8 +1,8 @@
 """generating tables
 
-Revision ID: 812a6757c8f7
+Revision ID: ba78a783fd01
 Revises: 
-Create Date: 2023-01-25 01:31:48.766024
+Create Date: 2023-01-26 07:56:32.476514
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '812a6757c8f7'
+revision = 'ba78a783fd01'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -24,8 +24,7 @@ def upgrade() -> None:
     sa.Column('selected_tick', sa.Integer(), nullable=True),
     sa.Column('session_id', sa.Integer(), nullable=True),
     sa.Column('step_count', sa.Integer(), nullable=True),
-    sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('session_id')
+    sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_audio_files_id'), 'audio_files', ['id'], unique=False)
     op.create_table('users',

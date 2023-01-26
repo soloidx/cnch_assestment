@@ -9,5 +9,5 @@ class AudioFile(Base):
     id = Column(Integer, primary_key=True, index=True)
     ticks = Column(JSON)
     selected_tick = Column(Integer)
-    session_id = Column(Integer, unique=True)
+    session_id = Column(Integer)
     step_count = Column(Integer)

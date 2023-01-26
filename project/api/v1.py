@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 from project.crud.audo_file import audio_file as crud_audio_file
 from project.crud.user import user as crud_user
 from project.deps import get_db
-from project.exceptions import SessionIdIntegrityError
+from project.exceptions import SessionIdIntegrityError, UserEmailIntegrityError
 from project.schema import (
     AudioFile,
     CreateAudioFile,
@@ -15,7 +15,7 @@ from project.schema import (
     User,
     CreateUser,
     UpdateUser,
-    DeleteUser
+    DeleteUser,
 )
 
 router = APIRouter()
@@ -27,7 +27,7 @@ router = APIRouter()
     description="List and search for audio files",
     response_model=List[CreateAudioFile],
 )
-def create_audio_file(session_id: Optional[int] = None, db: Session = Depends(get_db)):
+def list_audio_file(session_id: Optional[int] = None, db: Session = Depends(get_db)):
     audio_files = crud_audio_file.get_by_session_id(db, session_id)
     return audio_files
 
@@ -41,10 +41,11 @@ def create_audio_file(session_id: Optional[int] = None, db: Session = Depends(ge
 def create_audio_file(
     audio: AudioFile = Body(embed=True), db: Session = Depends(get_db)
 ):
-    try:
-        data_audio = crud_audio_file.create(db, obj_in=audio)
-    except IntegrityError as err:
-        raise SessionIdIntegrityError("The session_id value already exists")
+    if crud_audio_file.is_duplicated_session_id(db, audio):
+        raise SessionIdIntegrityError(
+            "The session_id/step_count combination already exists"
+        )
+    data_audio = crud_audio_file.create(db, obj_in=audio)
     return data_audio
 
 
@@ -62,10 +63,15 @@ def update_audio_file(
     )
     if audio_obj is None:
         raise HTTPException(status_code=404, detail="Item not found")
-    try:
-        data_audio = crud_audio_file.update(db, db_obj=audio_obj, obj_in=audio)
-    except IntegrityError as err:
-        raise SessionIdIntegrityError("The session_id value already exists")
+
+    # this is not needed because the only way to identify an audio object is by session_id and
+    # step count but,  in case we used an unique id we need to check for conflicts on update
+
+    # if audio_obj.session_id != audio.session_id or audio_obj.step_count != audio.step_count:
+    #     if crud_audio_file.is_duplicated_session_id(db, audio):
+    #         raise SessionIdIntegrityError("The session_id value already exists")
+
+    data_audio = crud_audio_file.update(db, db_obj=audio_obj, obj_in=audio)
     return data_audio
 
 
@@ -102,6 +108,9 @@ def list_users(session_id: Optional[int] = None, db: Session = Depends(get_db)):
     response_model=CreateUser,
 )
 def create_user(user: User = Body(embed=True), db: Session = Depends(get_db)):
+    if crud_user.is_duplicated_email(db, user):
+        raise UserEmailIntegrityError("There is another user with the same email")
+
     _user = crud_user.create(db, obj_in=user)
     return _user
 
@@ -118,6 +127,10 @@ def update_user(
     db: Session = Depends(get_db),
 ):
     user_db = crud_user.get(db, user_id)
+
+    if user_db.email != user.email and crud_user.is_duplicated_email(db, user):
+        raise UserEmailIntegrityError("There is another user with the same email")
+
     user_obj = crud_user.update(db, db_obj=user_db, obj_in=user)
     return user_obj
 

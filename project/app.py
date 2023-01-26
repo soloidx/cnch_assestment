@@ -3,7 +3,7 @@ from fastapi.responses import JSONResponse
 
 from project.api.v1 import router
 from settings import settings
-from project.exceptions import SessionIdIntegrityError
+from project.exceptions import SessionIdIntegrityError, UserEmailIntegrityError
 
 app = FastAPI(title=settings.PROJECT_NAME)
 
@@ -20,7 +20,20 @@ def handling_duplicate_session_id(request: Request, exc: SessionIdIntegrityError
         content={"detail": [
             {
                 "loc": ["body", "audio", "session_id"],
-                "msg": "the session_id already exists"
+                "msg": str(exc)
+            }
+        ]}
+    )
+
+
+@app.exception_handler(UserEmailIntegrityError)
+def handling_duplicate_session_id(request: Request, exc: UserEmailIntegrityError):
+    return JSONResponse(
+        status_code=422,
+        content={"detail": [
+            {
+                "loc": ["body", "user", "email"],
+                "msg": str(exc)
             }
         ]}
     )
