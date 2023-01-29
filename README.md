@@ -72,5 +72,5 @@ The tests has a couple of configurations in the `settings.py` file:
 ## Last comments / improvements:
 
 - I just covered the happy path in tests, we need to expand the test scenarios to all the cases and validations.
-- The search endpoint uses an approach of multiple SQL `like` (see [here](github.com/soloidx/cnch_assestment/blob/c9df17090d5e50fc546e63d6e470817cde8e9564/project/crud/user.py#L11-L24) ) statements, I would improve this by creating an indexer or at least creating a search field in the table.
+- The search endpoint uses an approach of multiple SQL `like` (see [here](https://github.com/soloidx/cnch_assestment/blob/c9df17090d5e50fc546e63d6e470817cde8e9564/project/crud/user.py#L11-L24) ) statements, I would improve this by creating an indexer or at least creating a search field in the table.
 - We need a fallback method / endpoint that we can use in test in order to clean the database when all the tests are finished, just in case a test fails and some test data are still in the database.
