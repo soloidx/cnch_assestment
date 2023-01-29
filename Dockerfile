@@ -18,5 +18,7 @@ COPY . /app
 COPY ./docker/entrypoint.sh /app/
 RUN chmod a+x entrypoint.sh
 
+EXPOSE 8080
+
 ENTRYPOINT ["/app/entrypoint.sh"]
 CMD ["python", "manage.py"]

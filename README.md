@@ -8,15 +8,17 @@
 This project uses dynamic variables that you can set using environment variables or a `.env` file like:
 
 ```text
-PROJECT_NAME="Take home assessment"
+PROJECT_NAME="Take home project local"
 SQLALCHEMY_DATABASE_URI="sqlite:///app.db"
+TEST_TARGET=remote
+REMOTE_ENDPOINT="https://concha-labs-375805.uc.r.appspot.com"
 ```
 
 ####  Main requirements:
 - Python3.10
 - poetry
 
-Basically you need to setup your poetry environment:
+Basically you need to set up your poetry environment:
 
 ```shell
 poetry install
@@ -43,3 +45,26 @@ docker-compose up
 ```
 
 this will fire up everything
+
+
+## Deployment:
+The current server architecture is based on Google AppEngine and SQL Server (PostgreSQL) with an internal VPC for communication
+
+you can refer to the file `app.yml` for the service configuration.
+
+## Testing:
+For testing we are using `pytest`, you can install with poetry by running:
+
+```shell
+poetry install --with dev
+```
+
+After the dependencies are installed, you can run `pytest` to run the current tests
+
+We are currently using a local sqlite database so, don't forget to run `alembic upgrade head` in order to have the most recent database.
+
+### Testing environments:
+The tests has a couple of configurations in the `settings.py` file:
+
+- `TEST_TARGET` could be `local` or `remote` and this means if we want to run the tests agains the local or a remote server.
+- `REMOTE_ENDPOINT` in case the test target is remote we can specify the remote server address that we can use for running the tests.

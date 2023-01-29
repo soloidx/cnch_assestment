@@ -1,2 +1,9 @@
 runtime: custom
 env: flex
+
+env_variables:
+  PROJECT_NAME: "Take home project, GCP version"
+  SQLALCHEMY_DATABASE_URI: "postgresql://postgres:concha_db_password@10.33.48.3:5432/concha_db"
+
+network:
+  name: concha-net
